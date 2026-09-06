@@ -1,0 +1,13 @@
+.page { animation: fadeIn 0.5s ease-out; }
+.title { font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text-primary); }
+.searchInput { width: 100%; max-width: 400px; padding: 0.75rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-primary); margin-bottom: 2rem; outline: none; }
+.searchInput:focus { border-color: var(--accent-primary); }
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.badgeAvailable { background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 0.25rem 0.75rem; border-radius: var(--radius-xl); font-size: 0.75rem; font-weight: 600; }
+.badgeAtCapacity { background: rgba(245, 158, 11, 0.1); color: var(--warning); padding: 0.25rem 0.75rem; border-radius: var(--radius-xl); font-size: 0.75rem; font-weight: 600; }
+.iconBtn { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 0.5rem; border-radius: var(--radius-sm); transition: background 0.2s; }
+.iconBtn:hover { background: var(--bg-glass-hover); color: var(--text-primary); }
+.expandedRow td { background: var(--bg-glass); border-bottom: 1px solid var(--border-subtle); padding: 1.5rem !important; }
+.expandedContent { color: var(--text-secondary); font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.expandedContent strong { color: var(--text-primary); }
+.loadingSkeleton { padding: 2rem; text-align: center; color: var(--text-secondary); }

@@ -1,0 +1,16 @@
+.page { animation: fadeIn 0.5s ease-out; }
+.title { font-size: 2rem; font-weight: 700; margin-bottom: 2rem; color: var(--text-primary); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+.mentorCard { background: var(--bg-card); backdrop-filter: blur(12px); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 1.5rem; }
+.mentorHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); }
+.mentorHeader h3 { font-size: 1.125rem; color: var(--text-primary); margin: 0; }
+.capacityBadge { background: var(--bg-glass); padding: 0.25rem 0.75rem; border-radius: var(--radius-xl); font-size: 0.75rem; color: var(--text-secondary); }
+.startupList { display: flex; flex-direction: column; gap: 0.75rem; }
+.startupCard { display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.2); padding: 0.75rem 1rem; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.05); transition: background 0.2s; }
+.startupCard:hover { background: rgba(0, 0, 0, 0.3); }
+.startupCard strong { color: var(--text-primary); font-size: 0.875rem; display: block; }
+.industry { color: var(--text-muted); font-size: 0.75rem; }
+.removeBtn { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0.5rem; border-radius: var(--radius-sm); transition: all 0.2s; }
+.removeBtn:hover { color: var(--error); background: rgba(239, 68, 68, 0.1); }
+.emptyText { color: var(--text-muted); font-size: 0.875rem; font-style: italic; text-align: center; padding: 1rem 0; }
+.loadingSkeleton { padding: 2rem; text-align: center; color: var(--text-secondary); }

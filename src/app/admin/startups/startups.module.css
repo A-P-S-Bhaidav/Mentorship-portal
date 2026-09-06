@@ -1,0 +1,13 @@
+.page { animation: fadeIn 0.5s ease-out; }
+.title { font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text-primary); }
+.controls { display: flex; gap: 1rem; margin-bottom: 2rem; }
+.searchInput, .filterSelect { padding: 0.75rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-primary); outline: none; }
+.searchInput { flex-grow: 1; max-width: 400px; }
+.filterSelect { min-width: 150px; }
+.searchInput:focus, .filterSelect:focus { border-color: var(--accent-primary); }
+.linkIcon { display: inline-flex; align-items: center; gap: 0.25rem; color: var(--accent-primary); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
+.linkIcon:hover { color: var(--accent-secondary); }
+.textMuted { color: var(--text-muted); font-size: 0.875rem; }
+.badgeSuccess { background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 0.25rem 0.75rem; border-radius: var(--radius-xl); font-size: 0.75rem; font-weight: 600; }
+.badgeWarning { background: rgba(245, 158, 11, 0.1); color: var(--warning); padding: 0.25rem 0.75rem; border-radius: var(--radius-xl); font-size: 0.75rem; font-weight: 600; }
+.loadingSkeleton { padding: 2rem; text-align: center; color: var(--text-secondary); }

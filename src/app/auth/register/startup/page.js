@@ -1,0 +1,262 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
+import styles from './register-startup.module.css';
+
+export default function RegisterStartup() {
+  const router = useRouter();
+  const { signUp } = useAuth();
+  
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  
+  const [formData, setFormData] = useState({
+    founderName: '',
+    email: '',
+    password: '',
+    startupName: '',
+    sector: '',
+    stage: '',
+    teamSize: '',
+    pitchDeckUrl: '',
+    description: ''
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validation
+    if (!formData.founderName || !formData.email || !formData.password || 
+        !formData.startupName || !formData.sector || !formData.stage) {
+      setError('Please fill in all required fields.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const { error: signUpError } = await signUp(formData.email, formData.password, {
+        role: 'startup',
+        founderName: formData.founderName,
+        startupName: formData.startupName,
+        sector: formData.sector,
+        stage: formData.stage,
+        teamSize: formData.teamSize,
+        pitchDeckUrl: formData.pitchDeckUrl,
+        description: formData.description
+      });
+      
+      if (signUpError) throw signUpError;
+
+      router.push('/startup/dashboard');
+      
+    } catch (err) {
+      setError(err.message || 'Failed to register. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.orb1} />
+      <div className={styles.orb2} />
+      
+      <div className={styles.glassCard}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Startup Registration</h1>
+          <p className={styles.subtitle}>Join Empressario to connect with world-class mentors and investors</p>
+        </div>
+
+        <form className={styles.form} onSubmit={handleSubmit}>
+          {error && <div className={styles.error}>{error}</div>}
+          
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>1. Founder Information</h2>
+            <div className={styles.grid}>
+              <div className={styles.inputGroup}>
+                <label className={styles.label} htmlFor="founderName">Founder Name *</label>
+                <input 
+                  id="founderName"
+                  name="founderName"
+                  type="text" 
+                  className={styles.input} 
+                  value={formData.founderName}
+                  onChange={handleChange}
+                  placeholder="John Smith"
+                  required
+                />
+              </div>
+              <div className={styles.inputGroup}>
+                <label className={styles.label} htmlFor="email">Email Address *</label>
+                <input 
+                  id="email"
+                  name="email"
+                  type="email" 
+                  className={styles.input} 
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="john@startup.com"
+                  required
+                />
+              </div>
+              <div className={styles.inputGroup}>
+                <label className={styles.label} htmlFor="password">Password *</label>
+                <input 
+                  id="password"
+                  name="password"
+                  type="password" 
+                  className={styles.input} 
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Create a strong password"
+                  required
+                  minLength={6}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>2. Startup Details</h2>
+            <div className={styles.grid}>
+              <div className={styles.inputGroup}>
+                <label className={styles.label} htmlFor="startupName">Startup Name *</label>
+                <input 
+                  id="startupName"
+                  name="startupName"
+                  type="text" 
+                  className={styles.input} 
+                  value={formData.startupName}
+                  onChange={handleChange}
+                  placeholder="NextGen Corp"
+                  required
+                />
+              </div>
+              <div className={styles.inputGroup}>
+                <label className={styles.label} htmlFor="sector">Sector *</label>
+                <select 
+                  id="sector"
+                  name="sector"
+                  className={styles.select}
+                  value={formData.sector}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="" disabled>Select a sector...</option>
+                  <option value="Technology">Technology</option>
+                  <option value="Healthcare">Healthcare</option>
+                  <option value="Fintech">Fintech</option>
+                  <option value="EdTech">EdTech</option>
+                  <option value="SaaS">SaaS</option>
+                  <option value="E-commerce">E-commerce</option>
+                  <option value="AI/ML">AI/ML</option>
+                  <option value="CleanTech">CleanTech</option>
+                  <option value="Consumer">Consumer</option>
+                  <option value="Enterprise">Enterprise</option>
+                  <option value="DeepTech">DeepTech</option>
+                  <option value="Biotech">Biotech</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div className={styles.inputGroup}>
+                <label className={styles.label} htmlFor="stage">Current Stage *</label>
+                <select 
+                  id="stage"
+                  name="stage"
+                  className={styles.select}
+                  value={formData.stage}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="" disabled>Select stage...</option>
+                  <option value="Ideation">Ideation</option>
+                  <option value="MVP">MVP</option>
+                  <option value="Pre-Seed">Pre-Seed</option>
+                  <option value="Seed">Seed</option>
+                  <option value="Series A">Series A</option>
+                  <option value="Series B+">Series B+</option>
+                </select>
+              </div>
+              <div className={styles.inputGroup}>
+                <label className={styles.label} htmlFor="teamSize">Team Size</label>
+                <select 
+                  id="teamSize"
+                  name="teamSize"
+                  className={styles.select}
+                  value={formData.teamSize}
+                  onChange={handleChange}
+                >
+                  <option value="" disabled>Select size...</option>
+                  <option value="1-5">1-5</option>
+                  <option value="6-10">6-10</option>
+                  <option value="11-25">11-25</option>
+                  <option value="26-50">26-50</option>
+                  <option value="50+">50+</option>
+                </select>
+              </div>
+              <div className={`${styles.inputGroup} ${styles.full}`}>
+                <label className={styles.label} htmlFor="description">Startup Description</label>
+                <textarea 
+                  id="description"
+                  name="description"
+                  className={styles.textarea} 
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder="Briefly describe your product, target market, and traction..."
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>3. Pitch Deck</h2>
+            <div className={styles.grid}>
+              <div className={`${styles.inputGroup} ${styles.full}`}>
+                <label className={styles.label} htmlFor="pitchDeckUrl">Pitch Deck (Google Drive Link)</label>
+                <input 
+                  id="pitchDeckUrl"
+                  name="pitchDeckUrl"
+                  type="url" 
+                  className={styles.input} 
+                  value={formData.pitchDeckUrl}
+                  onChange={handleChange}
+                  placeholder="https://drive.google.com/..."
+                />
+                <span className={styles.helperText}>Paste your Google Drive share link (ensure it is accessible)</span>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" className={styles.btn} disabled={loading}>
+            {loading ? (
+              <>
+                <svg className="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                </svg>
+                Registering...
+              </>
+            ) : (
+              'Complete Registration'
+            )}
+          </button>
+        </form>
+
+        <div className={styles.footer}>
+          <Link href="/auth/login" className={styles.link}>
+            Already have an account? Sign in
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
