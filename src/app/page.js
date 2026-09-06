@@ -79,7 +79,7 @@ export default function LandingPage() {
       <nav className={`${styles.navbar} ${scrolled ? styles.navbarScrolled : ''}`}>
         <div className={`container ${styles.navContainer}`}>
           <Link href="/" className={styles.logo}>
-            EMPRESSARIO
+            MENTORSHIP PORTAL
           </Link>
           
           <div className={styles.navLinks}>
@@ -293,7 +293,7 @@ export default function LandingPage() {
         <div className="container">
           <div className={styles.footerContent}>
             <Link href="/" className={styles.logo}>
-              EMPRESSARIO
+              MENTORSHIP PORTAL
             </Link>
             <div className={styles.footerLinks}>
               <Link href="/privacy" className={styles.footerLink}>Privacy Policy</Link>
@@ -301,7 +301,7 @@ export default function LandingPage() {
               <Link href="/contact" className={styles.footerLink}>Contact Us</Link>
             </div>
             <div className={styles.copyright}>
-              © {new Date().getFullYear()} Empressario. All rights reserved.
+              © {new Date().getFullYear()} Mentorship Portal. All rights reserved.
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
+import StartupOnboarding from '@/components/StartupOnboarding';
 import styles from './dashboard.module.css';
 
 export default function StartupDashboard() {
@@ -12,6 +13,7 @@ export default function StartupDashboard() {
   const [mentor, setMentor] = useState(null);
   const [stats, setStats] = useState({ meetings: 0, completed: 0 });
   const [loading, setLoading] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -55,6 +57,11 @@ export default function StartupDashboard() {
             setStats({ meetings: scheduled, completed });
           }
         }
+        if (startupData) {
+          if (!startupData.startup_name) {
+            setShowOnboarding(true);
+          }
+        }
       } catch (err) {
         console.error('Error fetching dashboard data:', err);
       } finally {
@@ -82,6 +89,10 @@ export default function StartupDashboard() {
   if (startup?.description) completion += 20;
   if (startup?.pitch_deck_url) completion += 20;
   if (startup?.industry) completion += 20;
+
+  if (showOnboarding) {
+    return <StartupOnboarding onComplete={() => window.location.reload()} />;
+  }
 
   return (
     <div className={styles.container}>

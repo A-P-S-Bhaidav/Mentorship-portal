@@ -38,36 +38,23 @@ export function AuthProvider({ children }) {
           if (pendingReg) {
             try {
               const regData = JSON.parse(pendingReg);
-              const { role, full_name, ...additionalData } = regData;
+              const { role, fullName, founderName } = regData;
               
               // Update profile role
               await supabase
                 .from('profiles')
-                .update({ role, full_name: full_name || fetchedProfile.full_name })
+                .update({ role, full_name: fullName || founderName || fetchedProfile.full_name })
                 .eq('id', session.user.id);
               
               // Insert into mentor/startup table
               if (role === 'mentor') {
                 await supabase.from('mentors').insert({
-                  id: session.user.id,
-                  firm: additionalData.firm || '',
-                  role_type: additionalData.role_type || '',
-                  expertise: additionalData.expertise || [],
-                  bio: additionalData.bio || '',
-                  linkedin_url: additionalData.linkedin_url || '',
-                  calendly_link: additionalData.calendly_link || '',
-                  max_startups: additionalData.max_startups || 4,
+                  id: session.user.id
                 });
               } else if (role === 'startup') {
                 await supabase.from('startups').insert({
                   id: session.user.id,
-                  startup_name: additionalData.startup_name || '',
-                  founder_name: additionalData.founder_name || '',
-                  sector: additionalData.sector || '',
-                  stage: additionalData.stage || '',
-                  team_size: additionalData.team_size || '',
-                  pitch_deck_url: additionalData.pitch_deck_url || '',
-                  description: additionalData.description || '',
+                  founder_name: founderName || ''
                 });
               }
               

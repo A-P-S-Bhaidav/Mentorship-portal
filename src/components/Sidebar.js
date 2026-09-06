@@ -53,8 +53,9 @@ export default function Sidebar({ role = 'mentor' }) {
       
       <aside className={`${styles.sidebar} ${isMobileOpen ? styles.open : ''}`}>
         <div className={styles.header}>
-          <h2>EMPRESSARIO</h2>
-          <span className={styles.subtitle}>Mentorship Portal</span>
+          <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <h2>MENTORSHIP PORTAL</h2>
+          </Link>
         </div>
         
         <nav className={styles.nav}>

@@ -1,5 +1,5 @@
 -- ========================================
--- EMPRESSARIO MENTORSHIP PORTAL
+-- MENTORSHIP PORTAL
 -- Supabase Database Setup
 -- ========================================
 -- Run this SQL in your Supabase SQL Editor (Dashboard > SQL Editor > New Query)

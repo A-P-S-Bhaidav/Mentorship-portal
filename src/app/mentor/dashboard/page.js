@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
+import MentorOnboarding from '@/components/MentorOnboarding';
 import styles from './dashboard.module.css';
 
 export default function MentorDashboard() {
@@ -10,6 +11,7 @@ export default function MentorDashboard() {
   const [startups, setStartups] = useState([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ total: 0, upcoming: 0, completed: 0 });
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     if (profile?.id) {
@@ -20,6 +22,17 @@ export default function MentorDashboard() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
+      
+      const { data: mentorData } = await supabase
+        .from('mentors')
+        .select('firm')
+        .eq('id', profile.id)
+        .single();
+        
+      if (mentorData && !mentorData.firm) {
+        setShowOnboarding(true);
+      }
+
       const { data: assignments, error } = await supabase
         .from('assignments')
         .select(`
@@ -71,6 +84,10 @@ export default function MentorDashboard() {
     check: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>,
     external: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
   };
+
+  if (showOnboarding) {
+    return <MentorOnboarding onComplete={() => window.location.reload()} />;
+  }
 
   return (
     <div className={styles.container}>

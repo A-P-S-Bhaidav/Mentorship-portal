@@ -2,8 +2,8 @@ import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 
 export const metadata = {
-  title: 'Empressario — Mentorship Portal',
-  description: 'Connect startups with experienced mentors. Empressario bridges the gap between ambitious founders and seasoned investors through structured, ongoing mentorship.',
+  title: 'Mentorship Portal',
+  description: 'Connect startups with experienced mentors. The Mentorship Portal bridges the gap between ambitious founders and seasoned investors through structured, ongoing mentorship.',
   keywords: 'mentorship, startups, angel investors, venture capital, mentoring platform',
 };
 

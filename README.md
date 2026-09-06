@@ -1,4 +1,4 @@
-# Empressario Mentorship Portal
+# Mentorship Portal
 
 A professional, premium three-portal mentorship platform connecting startups with experienced mentors (Angel Investors and VC professionals) through structured, ongoing mentorship engagements.
 
@@ -153,4 +153,4 @@ Startups provide their pitch deck as a **Google Drive share link** during regist
 
 ## License
 
-This project is proprietary to Empressario.
+This project is proprietary to Mentorship Portal.
