@@ -273,7 +273,7 @@
 
 .featuresGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: 1fr;
   gap: 2rem;
 }
 
@@ -283,6 +283,11 @@
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-default);
   transition: transform var(--transition-base), box-shadow var(--transition-base);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 2rem;
+  text-align: left;
 }
 
 .featureCard:hover {
@@ -300,7 +305,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  flex-shrink: 0;
 }
 
 .featureIcon svg {
@@ -308,10 +313,15 @@
   height: 28px;
 }
 
+.featureContent {
+  display: flex;
+  flex-direction: column;
+}
+
 .featureTitle {
   font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   color: var(--text-primary);
 }
 

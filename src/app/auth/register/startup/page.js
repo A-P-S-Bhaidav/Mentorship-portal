@@ -37,13 +37,12 @@ export default function RegisterStartup() {
     setError('');
 
     try {
-      const { error: signUpError } = await signUp(formData.email, formData.password, {
-        role: 'startup',
-        founderName: formData.founderName
+      await signUp(formData.email, formData.password, 'startup', {
+        full_name: formData.founderName,
+        founder_name: formData.founderName
       });
-      
-      if (signUpError) throw signUpError;
 
+      // Redirect to dashboard — layout will handle onboarding check
       router.push('/startup/dashboard');
       
     } catch (err) {
@@ -76,7 +75,7 @@ export default function RegisterStartup() {
       <div className={styles.glassCard}>
         <div className={styles.header}>
           <h1 className={styles.title}>Startup Registration</h1>
-          <p className={styles.subtitle}>Join the Mentorship Portal to connect with world-class mentors and investors</p>
+          <p className={styles.subtitle}>Join VentureUp to connect with world-class mentors and investors</p>
         </div>
 
         <form className={styles.form} onSubmit={handleSubmit}>

@@ -41,13 +41,11 @@ export default function RegisterMentor() {
     setError('');
 
     try {
-      const { error: signUpError } = await signUp(formData.email, formData.password, {
-        role: 'mentor',
-        fullName: formData.fullName
+      await signUp(formData.email, formData.password, 'mentor', {
+        full_name: formData.fullName
       });
-      
-      if (signUpError) throw signUpError;
 
+      // Redirect to dashboard — layout will handle onboarding check
       router.push('/mentor/dashboard');
       
     } catch (err) {
@@ -81,7 +79,7 @@ export default function RegisterMentor() {
       <div className={styles.glassCard}>
         <div className={styles.header}>
           <h1 className={styles.title}>Mentor Registration</h1>
-          <p className={styles.subtitle}>Join the Mentorship Portal and guide the next generation of founders</p>
+          <p className={styles.subtitle}>Join VentureUp and guide the next generation of founders</p>
         </div>
 
         <form className={styles.form} onSubmit={handleSubmit}>

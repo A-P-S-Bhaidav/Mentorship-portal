@@ -13,9 +13,9 @@
 }
 
 .contentWrapper {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 2rem 3rem;
+  padding: 2rem 1rem;
   width: 100%;
 }
 
@@ -53,5 +53,14 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .main {
+    margin-left: 0;
+  }
+  .contentWrapper {
+    padding: 4rem 1rem 1.5rem 1rem;
   }
 }

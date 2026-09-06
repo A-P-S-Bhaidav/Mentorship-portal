@@ -2,9 +2,9 @@ import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 
 export const metadata = {
-  title: 'Mentorship Portal',
-  description: 'Connect startups with experienced mentors. The Mentorship Portal bridges the gap between ambitious founders and seasoned investors through structured, ongoing mentorship.',
-  keywords: 'mentorship, startups, angel investors, venture capital, mentoring platform',
+  title: 'VentureUp — Structured Mentorship for Ambitious Startups',
+  description: 'VentureUp connects high-potential startups with experienced Angel Investors and VC professionals for guided growth, smart matching, and actionable insights.',
+  keywords: 'VentureUp, mentorship, startups, angel investors, venture capital, mentoring platform',
 };
 
 export default function RootLayout({ children }) {

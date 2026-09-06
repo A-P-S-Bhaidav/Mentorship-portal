@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
@@ -8,13 +8,35 @@ import styles from './login.module.css';
 
 export default function Login() {
   const router = useRouter();
-  const { signIn, signInWithOAuth } = useAuth();
+  const { signIn, signInWithOAuth, user, profile, loading: authLoading } = useAuth();
   
   const [role, setRole] = useState('startup');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [waitingForProfile, setWaitingForProfile] = useState(false);
+
+  // Redirect when profile is ready after login
+  useEffect(() => {
+    if (waitingForProfile && user && profile && !authLoading) {
+      const userRole = profile.role;
+      if (userRole === 'mentor') router.push('/mentor/dashboard');
+      else if (userRole === 'startup') router.push('/startup/dashboard');
+      else if (userRole === 'admin') router.push('/admin/dashboard');
+      else router.push('/');
+    }
+  }, [waitingForProfile, user, profile, authLoading, router]);
+
+  // If user is already logged in with a profile, redirect immediately
+  useEffect(() => {
+    if (!authLoading && user && profile) {
+      const userRole = profile.role;
+      if (userRole === 'mentor') router.push('/mentor/dashboard');
+      else if (userRole === 'startup') router.push('/startup/dashboard');
+      else if (userRole === 'admin') router.push('/admin/dashboard');
+    }
+  }, [authLoading, user, profile, router]);
 
   const handleRoleChange = (newRole) => {
     setRole(newRole);
@@ -52,24 +74,12 @@ export default function Login() {
     setError('');
 
     try {
-      const { error: signInError, user } = await signIn(email, password);
-      
-      if (signInError) throw signInError;
-
-      // Note: In a real app with Supabase, the role would be fetched from a profiles table.
-      // Here we assume the signIn was successful and redirect based on the selected role tab for demonstration,
-      // or rely on a user.user_metadata.role if available.
-      
-      const userRole = user?.user_metadata?.role || role;
-      
-      if (userRole === 'mentor') router.push('/mentor/dashboard');
-      else if (userRole === 'startup') router.push('/startup/dashboard');
-      else if (userRole === 'admin') router.push('/admin/dashboard');
-      else router.push('/');
-      
+      await signIn(email, password);
+      // Don't redirect here — wait for AuthContext to fetch the profile
+      // The useEffect above will handle the redirect once profile is ready
+      setWaitingForProfile(true);
     } catch (err) {
       setError(err.message || 'Failed to sign in. Please check your credentials.');
-    } finally {
       setLoading(false);
     }
   };
@@ -86,13 +96,13 @@ export default function Login() {
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="url(#gradient)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <defs>
                   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#6366f1" />
-                    <stop offset="100%" stopColor="#8b5cf6" />
+                    <stop offset="0%" stopColor="#1e40af" />
+                    <stop offset="100%" stopColor="#3b82f6" />
                   </linearGradient>
                 </defs>
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
               </svg>
-              MENTORSHIP PORTAL
+              VENTUREUP
             </h1>
           </Link>
           <p className={styles.subtitle}>Welcome back to the portal</p>
@@ -152,13 +162,13 @@ export default function Login() {
             />
           </div>
 
-          <button type="submit" className={styles.btn} disabled={loading}>
-            {loading ? (
+          <button type="submit" className={styles.btn} disabled={loading || waitingForProfile}>
+            {loading || waitingForProfile ? (
               <>
                 <svg className="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 12a9 9 0 1 1-6.219-8.56" />
                 </svg>
-                Signing in...
+                {waitingForProfile ? 'Loading dashboard...' : 'Signing in...'}
               </>
             ) : (
               'Sign In'
@@ -188,7 +198,7 @@ export default function Login() {
         <div className={styles.footer}>
           {role !== 'admin' && (
             <Link href={`/auth/register/${role}`} className={styles.link}>
-              Don't have an account? <span className={styles.linkAccent}>Register as {role === 'mentor' ? 'Mentor' : 'Startup'}</span>
+              Don&apos;t have an account? <span className={styles.linkAccent}>Register as {role === 'mentor' ? 'Mentor' : 'Startup'}</span>
             </Link>
           )}
           <Link href="/" className={styles.link}>

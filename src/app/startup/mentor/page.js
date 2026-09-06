@@ -117,14 +117,34 @@ export default function StartupMentorView() {
       {mentor.calendly_link && (
         <div className={styles.schedulingSection}>
           <h2 className={styles.sectionTitle}>Schedule a Mentoring Session</h2>
-          <div className={styles.calendlyContainer}>
-            <iframe 
-              src={mentor.calendly_link} 
-              width="100%" 
-              height="700" 
-              frameBorder="0"
-              title="Schedule Meeting with Mentor"
-            ></iframe>
+          <div className={styles.calendlyContainer} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '12px' }}>
+            <a 
+              href={mentor.calendly_link} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className={styles.primaryBtn || styles.backBtn}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                backgroundColor: 'var(--accent-primary, #2563eb)',
+                color: 'white',
+                padding: '10px 20px',
+                borderRadius: '6px',
+                textDecoration: 'none',
+                fontWeight: '500'
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}>
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              Schedule a Meeting
+            </a>
+            <span style={{ color: 'var(--text-secondary, #64748b)', fontSize: '0.9rem', wordBreak: 'break-all' }}>
+              {mentor.calendly_link}
+            </span>
           </div>
         </div>
       )}

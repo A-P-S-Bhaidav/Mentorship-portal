@@ -46,7 +46,7 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 800px;
+  max-width: 950px;
   background: var(--bg-card);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);

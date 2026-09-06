@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import styles from './startups.module.css';
 
@@ -10,30 +10,50 @@ export default function StartupsManagement() {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('All');
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
     async function fetchStartups() {
-      const { data } = await supabase.from('startups').select('*, profiles(full_name), assignments(mentors(profiles(full_name)))');
-      if (data) {
-        setStartups(data.map(s => {
-          const mentorNames = (s.assignments || []).map(a => a.mentors?.profiles?.full_name).filter(Boolean);
-          return {
-            ...s,
-            founder: s.profiles?.full_name || 'Unknown',
-            mentor: mentorNames.length > 0 ? mentorNames.join(', ') : 'Unassigned',
-            isAssigned: mentorNames.length > 0
-          };
-        }));
+      try {
+        const { data, error } = await supabase.from('startups').select('*, profiles(full_name), assignments(mentors(profiles(full_name)))');
+        
+        if (error) {
+          console.error(error);
+          setErrorMsg('Failed to load startups');
+          setLoading(false);
+          return;
+        }
+
+        if (data) {
+          const safeData = data.map(s => {
+            const assignmentsArray = Array.isArray(s.assignments) ? s.assignments : [];
+            const mentorNames = assignmentsArray.map(a => a?.mentors?.profiles?.full_name).filter(Boolean);
+            
+            return {
+              ...s,
+              founder: s.profiles?.full_name || 'Unknown',
+              mentor: mentorNames.length > 0 ? mentorNames.join(', ') : 'Unassigned',
+              isAssigned: mentorNames.length > 0
+            };
+          });
+          setStartups(safeData);
+        }
+      } catch (err) {
+        console.error(err);
+        setErrorMsg('An error occurred');
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     fetchStartups();
   }, []);
 
   const filteredStartups = startups.filter(s => {
-    const startupName = s.startup_name || '';
-    const founder = s.founder || '';
-    const matchesSearch = startupName.toLowerCase().includes(search.toLowerCase()) || founder.toLowerCase().includes(search.toLowerCase());
+    const startupName = String(s.startup_name || '');
+    const founder = String(s.founder || '');
+    const searchLower = String(search || '').toLowerCase();
+    
+    const matchesSearch = startupName.toLowerCase().includes(searchLower) || founder.toLowerCase().includes(searchLower);
     const matchesFilter = filter === 'All' ? true : (filter === 'Assigned' ? s.isAssigned : !s.isAssigned);
     return matchesSearch && matchesFilter;
   });
@@ -43,6 +63,8 @@ export default function StartupsManagement() {
   return (
     <div className={styles.page}>
       <h1 className={styles.title}>Startups Management</h1>
+      
+      {errorMsg && <div style={{ color: 'red', marginBottom: '1rem' }}>{errorMsg}</div>}
       
       <div className={styles.tabsContainer}>
         <button 
@@ -83,29 +105,35 @@ export default function StartupsManagement() {
             </tr>
           </thead>
           <tbody>
-            {filteredStartups.map(s => (
-              <tr key={s.id}>
-                <td><strong>{s.startup_name || 'N/A'}</strong></td>
-                <td>{s.founder}</td>
-                <td>{s.sector || 'N/A'}</td>
-                <td><span className="badge-secondary">{s.stage || 'N/A'}</span></td>
-                <td>
-                  {s.pitch_deck_url ? (
-                    <a href={s.pitch_deck_url} target="_blank" rel="noopener noreferrer" className={styles.linkIcon}>
-                      <ExternalLinkIcon /> Deck
-                    </a>
-                  ) : <span className={styles.textMuted}>None</span>}
-                </td>
-                <td>{s.mentor}</td>
-                <td>
-                  {s.isAssigned ? (
-                    <span className={styles.badgeSuccess}>Assigned</span>
-                  ) : (
-                    <span className={styles.badgeWarning}>Unassigned</span>
-                  )}
-                </td>
+            {filteredStartups.length === 0 ? (
+              <tr>
+                <td colSpan="7" style={{textAlign: 'center', padding: '2rem'}}>No startups found</td>
               </tr>
-            ))}
+            ) : (
+              filteredStartups.map(s => (
+                <tr key={s.id}>
+                  <td><strong>{s.startup_name || 'N/A'}</strong></td>
+                  <td>{s.founder}</td>
+                  <td>{s.sector || 'N/A'}</td>
+                  <td><span className="badge-secondary">{s.stage || 'N/A'}</span></td>
+                  <td>
+                    {s.pitch_deck_url ? (
+                      <a href={s.pitch_deck_url} target="_blank" rel="noopener noreferrer" className={styles.linkIcon}>
+                        <ExternalLinkIcon /> Deck
+                      </a>
+                    ) : <span className={styles.textMuted}>None</span>}
+                  </td>
+                  <td>{s.mentor}</td>
+                  <td>
+                    {s.isAssigned ? (
+                      <span className={styles.badgeSuccess}>Assigned</span>
+                    ) : (
+                      <span className={styles.badgeWarning}>Unassigned</span>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

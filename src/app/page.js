@@ -73,7 +73,7 @@ export default function LandingPage() {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{color: 'var(--accent-primary)'}}>
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
             </svg>
-            Mentorship Portal
+            VentureUp
           </Link>
           
           <div className={styles.navLinks}>
@@ -216,24 +216,30 @@ export default function LandingPage() {
               <div className={styles.featureIcon}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
               </div>
-              <h3 className={styles.featureTitle}>Intelligent Matching & Portals</h3>
-              <p className={styles.featureDesc}>Our proprietary algorithm connects high-potential startups with the most relevant investors and industry experts based on sector, stage, and specific growth needs. Once matched, users collaborate within dedicated, role-based portals designed specifically for Mentors, Startups, and Administrators to ensure privacy and laser-focused engagement.</p>
+              <div className={styles.featureContent}>
+                <h3 className={styles.featureTitle}>Intelligent Matching & Portals</h3>
+                <p className={styles.featureDesc}>Our proprietary algorithm connects high-potential startups with the most relevant investors and industry experts based on sector, stage, and specific growth needs. Once matched, users collaborate within dedicated, role-based portals designed specifically for Mentors, Startups, and Administrators to ensure privacy and laser-focused engagement.</p>
+              </div>
             </motion.div>
             
             <motion.div variants={fadeUp} className={styles.featureCard}>
               <div className={styles.featureIcon}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
               </div>
-              <h3 className={styles.featureTitle}>End-to-End Lifecycle Management</h3>
-              <p className={styles.featureDesc}>Manage your entire mentorship relationship directly through the platform. Seamlessly book, reschedule, and manage meetings with integrated scheduling tools. Establish clear milestones, track action items from every session, and measure your startup&apos;s velocity over time to ensure that every conversation translates into tangible business results.</p>
+              <div className={styles.featureContent}>
+                <h3 className={styles.featureTitle}>End-to-End Lifecycle Management</h3>
+                <p className={styles.featureDesc}>Manage your entire mentorship relationship directly through the platform. Seamlessly book, reschedule, and manage meetings with integrated scheduling tools. Establish clear milestones, track action items from every session, and measure your startup&apos;s velocity over time to ensure that every conversation translates into tangible business results.</p>
+              </div>
             </motion.div>
             
             <motion.div variants={fadeUp} className={styles.featureCard}>
               <div className={styles.featureIcon}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
               </div>
-              <h3 className={styles.featureTitle}>Secure Sharing & Real-time Analytics</h3>
-              <p className={styles.featureDesc}>Maintain a centralized, highly secure repository for your pitch decks, financial documents, and business plans, ensuring your mentors always have access to your latest materials. Administrators and program managers can track platform engagement metrics, monitor session feedback, and oversee startup growth milestones through comprehensive real-time dashboards.</p>
+              <div className={styles.featureContent}>
+                <h3 className={styles.featureTitle}>Secure Sharing & Real-time Analytics</h3>
+                <p className={styles.featureDesc}>Maintain a centralized, highly secure repository for your pitch decks, financial documents, and business plans, ensuring your mentors always have access to your latest materials. Administrators and program managers can track platform engagement metrics, monitor session feedback, and oversee startup growth milestones through comprehensive real-time dashboards.</p>
+              </div>
             </motion.div>
           </motion.div>
         </div>
@@ -247,7 +253,7 @@ export default function LandingPage() {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{color: 'var(--accent-primary)'}}>
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
               </svg>
-              Mentorship Portal
+              VentureUp
             </Link>
             <div className={styles.footerLinks}>
               <Link href="#" className={styles.footerLink}>Privacy Policy</Link>
@@ -255,7 +261,7 @@ export default function LandingPage() {
               <Link href="#" className={styles.footerLink}>Contact Us</Link>
             </div>
             <div className={styles.copyright}>
-              © {new Date().getFullYear()} Mentorship Portal. All rights reserved.
+              © {new Date().getFullYear()} VentureUp. All rights reserved.
             </div>
           </div>
         </div>

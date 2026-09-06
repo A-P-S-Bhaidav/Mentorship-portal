@@ -1,38 +1,79 @@
 'use client';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/context/AuthContext';
 import styles from './detail.module.css';
 
 export default function StartupDetail({ params }) {
   const router = useRouter();
+  const { user } = useAuth();
   const [startup, setStartup] = useState(null);
+  const [mentorCalendly, setMentorCalendly] = useState('');
   const [loading, setLoading] = useState(true);
+  
+  const unwrappedParams = React.use(params);
+  const startupId = unwrappedParams?.id;
 
   useEffect(() => {
     async function fetchStartup() {
+      if (!startupId || !user) return;
+      
       try {
-        const { data, error } = await supabase
-          .from('startups')
-          .select('*')
-          .eq('id', params.id)
+        // Query through assignments to satisfy RLS policy
+        const { data: assignment, error: assignError } = await supabase
+          .from('assignments')
+          .select(`
+            id,
+            startups:startup_id (
+              id, startup_name, founder_name, sector, stage, 
+              description, pitch_deck_url, website, email
+            )
+          `)
+          .eq('startup_id', startupId)
+          .eq('mentor_id', user.id)
+          .eq('status', 'active')
           .single();
-        if (error) throw error;
-        setStartup(data);
+
+        if (assignError) {
+          // Fallback: try direct query (for admins or if RLS allows)
+          const { data: directData, error: directError } = await supabase
+            .from('startups')
+            .select('*')
+            .eq('id', startupId)
+            .single();
+          
+          if (!directError && directData) {
+            setStartup(directData);
+          }
+        } else if (assignment?.startups) {
+          setStartup(assignment.startups);
+        }
+
+        // Fetch mentor's own calendly link
+        const { data: mentorData } = await supabase
+          .from('mentors')
+          .select('calendly_link')
+          .eq('id', user.id)
+          .single();
+        
+        if (mentorData?.calendly_link) {
+          setMentorCalendly(mentorData.calendly_link);
+        }
       } catch (err) {
-        console.error(err);
+        console.error('Error fetching startup:', err);
       } finally {
         setLoading(false);
       }
     }
     fetchStartup();
-  }, [params.id]);
+  }, [startupId, user]);
 
   if (loading) {
     return <div className={styles.loading}>Loading startup details...</div>;
   }
   if (!startup) {
-    return <div className={styles.error}>Startup not found.</div>;
+    return <div className={styles.error}>Startup not found or you don&apos;t have access.</div>;
   }
 
   return (
@@ -62,6 +103,14 @@ export default function StartupDetail({ params }) {
               <span className={styles.label}>Email</span>
               <span className={styles.value}>{startup.email || 'N/A'}</span>
             </div>
+            {startup.website && (
+              <div className={styles.infoItem}>
+                <span className={styles.label}>Website</span>
+                <a href={startup.website} target="_blank" rel="noopener noreferrer" className={styles.value} style={{color: 'var(--accent-primary)'}}>
+                  {startup.website}
+                </a>
+              </div>
+            )}
             <div className={styles.infoItem}>
               <span className={styles.label}>Description</span>
               <span className={styles.value}>{startup.description || 'No description provided.'}</span>
@@ -78,6 +127,16 @@ export default function StartupDetail({ params }) {
             </a>
           ) : (
             <p className={styles.noData}>No pitch deck available.</p>
+          )}
+
+          {mentorCalendly && (
+            <>
+              <h2 style={{marginTop: '2rem'}}>Schedule Meeting</h2>
+              <a href={mentorCalendly} target="_blank" rel="noopener noreferrer" className={styles.pitchBtn}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                Open Calendly
+              </a>
+            </>
           )}
         </div>
       </div>
