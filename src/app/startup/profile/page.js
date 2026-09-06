@@ -34,8 +34,8 @@ export default function StartupProfile() {
         if (startupData) {
           setFormData(prev => ({
             ...prev,
-            company_name: startupData.company_name || '',
-            industry: startupData.industry || '',
+            company_name: startupData.startup_name || '',
+            industry: startupData.sector || '',
             stage: startupData.stage || '',
             description: startupData.description || '',
             pitch_deck_url: startupData.pitch_deck_url || '',
@@ -73,8 +73,8 @@ export default function StartupProfile() {
         .from('startups')
         .upsert({
           id: user.id,
-          company_name: formData.company_name,
-          industry: formData.industry,
+          startup_name: formData.company_name,
+          sector: formData.industry,
           stage: formData.stage,
           description: formData.description,
           pitch_deck_url: formData.pitch_deck_url,

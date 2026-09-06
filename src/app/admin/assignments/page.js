@@ -15,7 +15,7 @@ export default function AssignmentsOverview() {
 
   async function fetchAssignments() {
     setLoading(true);
-    const { data } = await supabase.from('mentors').select('*, profiles(full_name), assignments(id, startup_id, startups(company_name, industry))');
+    const { data } = await supabase.from('mentors').select('*, profiles(full_name), assignments(id, startup_id, startups(startup_name, sector))');
     if (data) {
       setMentors(data.map(m => ({
         ...m,
@@ -51,8 +51,8 @@ export default function AssignmentsOverview() {
                 m.assignments.map(a => (
                   <div key={a.id} className={styles.startupCard}>
                     <div>
-                      <strong>{a.startups?.company_name}</strong>
-                      <span className={styles.industry}>{a.startups?.industry}</span>
+                      <strong>{a.startups?.startup_name}</strong>
+                      <span className={styles.industry}>{a.startups?.sector}</span>
                     </div>
                     <button className={styles.removeBtn} onClick={() => handleRemove(a.id)} title="Remove assignment">
                       <TrashIcon />

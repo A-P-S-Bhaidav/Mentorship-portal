@@ -39,7 +39,7 @@ export default function AdminDashboard() {
         supabase.from('assignments').select('*', { count: 'exact', head: true }).eq('status', 'active'),
         supabase.from('meetings').select('*', { count: 'exact', head: true })
       ]);
-      const { data: recent } = await supabase.from('assignments').select('*, mentors(profiles(full_name)), startups(company_name)').order('created_at', { ascending: false }).limit(5);
+      const { data: recent } = await supabase.from('assignments').select('*, mentors(profiles(full_name)), startups(startup_name)').order('created_at', { ascending: false }).limit(5);
       const { data: mData } = await supabase.from('mentors').select('id, max_startups, profiles(full_name), assignments(id)');
       setStats({ mentors: mCount || 0, startups: sCount || 0, assignments: aCount || 0, meetings: meCount || 0 });
       if (recent) setActivities(recent);
@@ -90,7 +90,7 @@ export default function AdminDashboard() {
               <div key={i} className={styles.timelineItem}>
                 <div className={styles.timelineDot}></div>
                 <div className={styles.timelineContent}>
-                  <p><strong>{act.mentors?.profiles?.full_name}</strong> assigned to <strong>{act.startups?.company_name}</strong></p>
+                  <p><strong>{act.mentors?.profiles?.full_name}</strong> assigned to <strong>{act.startups?.startup_name}</strong></p>
                   <span className={styles.timelineTime}>{new Date(act.created_at).toLocaleDateString()}</span>
                 </div>
               </div>

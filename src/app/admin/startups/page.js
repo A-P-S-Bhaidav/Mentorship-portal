@@ -44,13 +44,29 @@ export default function StartupsManagement() {
     <div className={styles.page}>
       <h1 className={styles.title}>Startups Management</h1>
       
+      <div className={styles.tabsContainer}>
+        <button 
+          className={`${styles.tab} ${filter === 'All' ? styles.activeTab : ''}`}
+          onClick={() => setFilter('All')}
+        >
+          All Startups
+        </button>
+        <button 
+          className={`${styles.tab} ${filter === 'Assigned' ? styles.activeTab : ''}`}
+          onClick={() => setFilter('Assigned')}
+        >
+          Assigned Startups
+        </button>
+        <button 
+          className={`${styles.tab} ${filter === 'Unassigned' ? styles.activeTab : ''}`}
+          onClick={() => setFilter('Unassigned')}
+        >
+          Unassigned Startups
+        </button>
+      </div>
+
       <div className={styles.controls}>
-        <input type="text" className={styles.searchInput} placeholder="Search startups..." value={search} onChange={e => setSearch(e.target.value)} />
-        <select className={styles.filterSelect} value={filter} onChange={e => setFilter(e.target.value)}>
-          <option value="All">All Status</option>
-          <option value="Assigned">Assigned</option>
-          <option value="Unassigned">Unassigned</option>
-        </select>
+        <input type="text" className={styles.searchInput} placeholder="Search startups by name or founder..." value={search} onChange={e => setSearch(e.target.value)} />
       </div>
       
       <div className="glass-card">

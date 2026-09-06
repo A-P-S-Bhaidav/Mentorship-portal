@@ -11,6 +11,8 @@ export default function MentorsManagement() {
   const [loading, setLoading] = useState(true);
   const [expandedRow, setExpandedRow] = useState(null);
 
+  const [filter, setFilter] = useState('All');
+
   useEffect(() => {
     async function fetchMentors() {
       const { data } = await supabase.from('mentors').select('*, profiles(full_name, email), assignments(id)');
@@ -27,14 +29,47 @@ export default function MentorsManagement() {
     fetchMentors();
   }, []);
 
-  const filteredMentors = mentors.filter(m => m.name.toLowerCase().includes(search.toLowerCase()) || (m.firm && m.firm.toLowerCase().includes(search.toLowerCase())));
+  const filteredMentors = mentors.filter(m => {
+    const matchesSearch = m.name.toLowerCase().includes(search.toLowerCase()) || (m.firm && m.firm.toLowerCase().includes(search.toLowerCase()));
+    
+    let matchesFilter = true;
+    if (filter === 'Available') {
+      matchesFilter = m.assignedCount < m.max_startups;
+    } else if (filter === 'Allotted') {
+      matchesFilter = m.assignedCount > 0;
+    }
+    
+    return matchesSearch && matchesFilter;
+  });
 
   if (loading) return <div className={styles.loadingSkeleton}>Loading...</div>;
 
   return (
     <div className={styles.page}>
       <h1 className={styles.title}>Mentors Management</h1>
-      <input type="text" className={styles.searchInput} placeholder="Search mentors..." value={search} onChange={e => setSearch(e.target.value)} />
+      
+      <div className={styles.tabsContainer}>
+        <button 
+          className={`${styles.tab} ${filter === 'All' ? styles.activeTab : ''}`}
+          onClick={() => setFilter('All')}
+        >
+          All Mentors
+        </button>
+        <button 
+          className={`${styles.tab} ${filter === 'Available' ? styles.activeTab : ''}`}
+          onClick={() => setFilter('Available')}
+        >
+          Available (Free) Mentors
+        </button>
+        <button 
+          className={`${styles.tab} ${filter === 'Allotted' ? styles.activeTab : ''}`}
+          onClick={() => setFilter('Allotted')}
+        >
+          Allotted Mentors
+        </button>
+      </div>
+
+      <input type="text" className={styles.searchInput} placeholder="Search mentors by name or firm..." value={search} onChange={e => setSearch(e.target.value)} />
       
       <div className="glass-card">
         <table className="data-table">
