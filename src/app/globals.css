@@ -612,9 +612,9 @@ p {
 
 /* ── Utility Classes ── */
 .container {
-  max-width: var(--max-content);
+  width: 100%;
   margin: 0 auto;
-  padding: 0 var(--space-lg);
+  padding: 0 4%;
 }
 
 .sr-only {
