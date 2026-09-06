@@ -64,7 +64,7 @@ export default function StartupOnboarding() {
       <div className={styles.onboardingCard}>
         <div className={styles.header}>
           <h1 className={styles.title}>Welcome to Mentorship Portal</h1>
-          <p className={styles.subtitle}>Let's set up your startup profile before you continue.</p>
+          <p className={styles.subtitle}>Let&apos;s set up your startup profile before you continue.</p>
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
