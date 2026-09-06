@@ -31,7 +31,9 @@ export default function StartupsManagement() {
   }, []);
 
   const filteredStartups = startups.filter(s => {
-    const matchesSearch = s.company_name.toLowerCase().includes(search.toLowerCase()) || s.founder.toLowerCase().includes(search.toLowerCase());
+    const startupName = s.startup_name || '';
+    const founder = s.founder || '';
+    const matchesSearch = startupName.toLowerCase().includes(search.toLowerCase()) || founder.toLowerCase().includes(search.toLowerCase());
     const matchesFilter = filter === 'All' ? true : (filter === 'Assigned' ? s.isAssigned : !s.isAssigned);
     return matchesSearch && matchesFilter;
   });
@@ -67,9 +69,9 @@ export default function StartupsManagement() {
           <tbody>
             {filteredStartups.map(s => (
               <tr key={s.id}>
-                <td><strong>{s.company_name}</strong></td>
+                <td><strong>{s.startup_name || 'N/A'}</strong></td>
                 <td>{s.founder}</td>
-                <td>{s.industry || 'N/A'}</td>
+                <td>{s.sector || 'N/A'}</td>
                 <td><span className="badge-secondary">{s.stage || 'N/A'}</span></td>
                 <td>
                   {s.pitch_deck_url ? (
