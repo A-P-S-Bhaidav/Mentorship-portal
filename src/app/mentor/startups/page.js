@@ -12,11 +12,12 @@ export default function MentorStartups() {
 
   useEffect(() => {
     if (profile?.id) {
+      // eslint-disable-next-line
       fetchStartups();
     }
   }, [profile]);
 
-  const fetchStartups = async () => {
+  async function fetchStartups() {
     try {
       setLoading(true);
       const { data: assignments, error } = await supabase

@@ -235,7 +235,7 @@ export default function StartupProfile() {
                 className={styles.input}
                 placeholder="https://docs.google.com/presentation/d/..."
               />
-              <span className={styles.helperText}>Paste your Google Drive share link. Make sure access is set to "Anyone with the link".</span>
+              <span className={styles.helperText}>Paste your Google Drive share link. Make sure access is set to &quot;Anyone with the link&quot;.</span>
             </div>
           </div>
 

@@ -75,7 +75,7 @@ export function AuthProvider({ children }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const fetchProfile = async (userId) => {
+  async function fetchProfile(userId) {
     try {
       const { data, error } = await supabase
         .from('profiles')

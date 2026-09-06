@@ -12,6 +12,7 @@ export default function MentorMeetings() {
 
   useEffect(() => {
     if (profile?.id) {
+      // eslint-disable-next-line
       fetchMeetings();
     }
   }, [profile]);

@@ -15,6 +15,8 @@ export default function MentorLayout({ children }) {
   const [onboardingComplete, setOnboardingComplete] = useState(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 

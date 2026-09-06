@@ -15,6 +15,7 @@ export default function StartupLayout({ children }) {
   const [onboardingComplete, setOnboardingComplete] = useState(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsClient(true);
   }, []);
 

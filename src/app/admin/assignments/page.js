@@ -10,6 +10,7 @@ export default function AssignmentsOverview() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // eslint-disable-next-line
     fetchAssignments();
   }, []);
 

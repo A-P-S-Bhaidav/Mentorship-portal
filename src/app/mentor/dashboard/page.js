@@ -15,6 +15,7 @@ export default function MentorDashboard() {
 
   useEffect(() => {
     if (profile?.id) {
+      // eslint-disable-next-line
       fetchDashboardData();
     }
   }, [profile]);

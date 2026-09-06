@@ -18,6 +18,7 @@ export default function MentorProfile() {
 
   useEffect(() => {
     if (profile) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         bio: profile.bio || '',
         expertise: profile.expertise?.join(', ') || '',

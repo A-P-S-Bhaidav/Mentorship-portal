@@ -121,7 +121,7 @@ export default function StartupMeetings() {
               </svg>
             </div>
             <h3>No {activeTab} meetings</h3>
-            <p>You don't have any {activeTab} mentoring sessions at the moment.</p>
+            <p>You don&apos;t have any {activeTab} mentoring sessions at the moment.</p>
             {activeTab === 'upcoming' && (
               <Link href="/startup/mentor" className={styles.emptyAction}>
                 Schedule a meeting now
