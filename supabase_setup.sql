@@ -107,6 +107,18 @@ ALTER TABLE meetings ENABLE ROW LEVEL SECURITY;
 
 -- ── Profiles Policies ──
 
+-- Create a SECURITY DEFINER function to check admin status
+-- This bypasses RLS so it won't trigger an infinite recursion loop.
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM profiles
+    WHERE id = auth.uid() AND role = 'admin'
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
 -- Users can read their own profile
 CREATE POLICY "Users can read own profile"
   ON profiles FOR SELECT
@@ -115,11 +127,7 @@ CREATE POLICY "Users can read own profile"
 -- Admins can read all profiles
 CREATE POLICY "Admins can read all profiles"
   ON profiles FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Users can update their own profile
 CREATE POLICY "Users can update own profile"
@@ -153,11 +161,7 @@ CREATE POLICY "Startups can read assigned mentor"
 -- Admins can read all mentors
 CREATE POLICY "Admins can read all mentors"
   ON mentors FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Mentors can update their own data
 CREATE POLICY "Mentors can update own data"
@@ -191,11 +195,7 @@ CREATE POLICY "Mentors can read assigned startups"
 -- Admins can read all startups
 CREATE POLICY "Admins can read all startups"
   ON startups FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Startups can update their own data
 CREATE POLICY "Startups can update own data"
@@ -222,11 +222,7 @@ CREATE POLICY "Startups can read own assignments"
 -- Admins can do everything with assignments
 CREATE POLICY "Admins full access on assignments"
   ON assignments FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- ── Meetings Policies ──
 
@@ -243,11 +239,7 @@ CREATE POLICY "Startups can read own meetings"
 -- Admins can do everything with meetings
 CREATE POLICY "Admins full access on meetings"
   ON meetings FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Both mentors and startups can create meetings
 CREATE POLICY "Participants can create meetings"
