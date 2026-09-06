@@ -77,11 +77,11 @@ export default function StartupMentorView() {
       <div className={styles.profileCard}>
         <div className={styles.profileHeader}>
           <div className={styles.avatarLarge}>
-            {mentor.company_name?.charAt(0) || 'M'}
+            {mentor.firm?.charAt(0) || 'M'}
           </div>
           <div className={styles.profileInfo}>
             <h2 className={styles.name}>{mentor.role || 'Mentor Profile'}</h2>
-            <p className={styles.firm}>{mentor.company_name}</p>
+            <p className={styles.firm}>{mentor.firm}</p>
             {mentor.linkedin_url && (
               <a href={mentor.linkedin_url} target="_blank" rel="noopener noreferrer" className={styles.linkedinLink}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

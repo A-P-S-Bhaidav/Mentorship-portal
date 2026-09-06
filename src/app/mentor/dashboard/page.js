@@ -40,7 +40,7 @@ export default function MentorDashboard() {
           startup_id,
           startups:startup_id (
             id,
-            company_name,
+            startup_name,
             sector,
             stage,
             founder_name,
@@ -140,7 +140,7 @@ export default function MentorDashboard() {
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className={styles.cardHeader}>
-                  <h3>{startup.company_name}</h3>
+                  <h3>{startup.startup_name}</h3>
                   <div className={styles.badges}>
                     <span className={styles.badge}>{startup.sector}</span>
                     <span className={styles.badgeOutline}>{startup.stage}</span>

@@ -36,8 +36,8 @@ export default function MatchingInterface() {
   const handleAutoMatch = () => {
     const suggestions = [];
     startups.forEach(startup => {
-      // Find mentor with matching industry/expertise
-      const match = mentors.find(m => (m.expertise || []).includes(startup.industry) && !suggestions.some(s => s.mentor.id === m.id && s.mentor.assignedCount + suggestions.filter(x => x.mentor.id === m.id).length >= m.max_startups));
+      // Find mentor with matching sector/expertise
+      const match = mentors.find(m => (m.expertise || []).includes(startup.sector) && !suggestions.some(s => s.mentor.id === m.id && s.mentor.assignedCount + suggestions.filter(x => x.mentor.id === m.id).length >= m.max_startups));
       if (match) {
         suggestions.push({ startup, mentor: match });
       }
@@ -87,7 +87,7 @@ export default function MatchingInterface() {
           <div className={styles.previewGrid}>
             {previewMatches.map((match, i) => (
               <div key={i} className={styles.previewCard}>
-                <div><strong>{match.startup.company_name}</strong> ({match.startup.industry})</div>
+                <div><strong>{match.startup.startup_name}</strong> ({match.startup.sector})</div>
                 <div className={styles.matchArrow}>→</div>
                 <div><strong>{match.mentor.name}</strong></div>
                 <button className="btn btn-sm" onClick={() => confirmMatch(match.startup.id, match.mentor.id)}>Approve</button>
@@ -107,8 +107,8 @@ export default function MatchingInterface() {
                 className={`${styles.card} ${selectedStartup === s.id ? styles.selected : ''}`}
                 onClick={() => setSelectedStartup(s.id)}
               >
-                <h3>{s.company_name}</h3>
-                <p>Sector: {s.industry || 'N/A'}</p>
+                <h3>{s.startup_name}</h3>
+                <p>Sector: {s.sector || 'N/A'}</p>
                 <p>Stage: {s.stage || 'N/A'}</p>
               </div>
             ))}
@@ -148,7 +148,7 @@ export default function MatchingInterface() {
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
             <h3>Confirm Assignment</h3>
-            <p>Are you sure you want to assign <strong>{startups.find(s => s.id === selectedStartup)?.company_name}</strong> to <strong>{mentors.find(m => m.id === selectedMentor)?.name}</strong>?</p>
+            <p>Are you sure you want to assign <strong>{startups.find(s => s.id === selectedStartup)?.startup_name}</strong> to <strong>{mentors.find(m => m.id === selectedMentor)?.name}</strong>?</p>
             <div className={styles.modalActions}>
               <button className="btn" style={{background: 'var(--bg-secondary)'}} onClick={() => setShowModal(false)}>Cancel</button>
               <button className="btn" onClick={() => confirmMatch(selectedStartup, selectedMentor)}>Confirm</button>

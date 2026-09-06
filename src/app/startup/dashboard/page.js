@@ -85,10 +85,10 @@ export default function StartupDashboard() {
 
   // Calculate profile completion (basic logic)
   let completion = 20;
-  if (startup?.company_name) completion += 20;
+  if (startup?.startup_name) completion += 20;
   if (startup?.description) completion += 20;
   if (startup?.pitch_deck_url) completion += 20;
-  if (startup?.industry) completion += 20;
+  if (startup?.sector) completion += 20;
 
   if (showOnboarding) {
     return <StartupOnboarding onComplete={() => window.location.reload()} />;
@@ -98,7 +98,7 @@ export default function StartupDashboard() {
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.welcomeInfo}>
-          <h1>Welcome back, <span className={styles.gradientText}>{startup?.company_name || profile?.full_name || 'Founder'}</span></h1>
+          <h1>Welcome back, <span className={styles.gradientText}>{startup?.startup_name || profile?.full_name || 'Founder'}</span></h1>
           <p className={styles.subtitle}>Here is what is happening with your mentorship journey today.</p>
         </div>
       </header>

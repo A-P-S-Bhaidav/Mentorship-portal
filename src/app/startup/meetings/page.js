@@ -33,7 +33,7 @@ export default function StartupMeetings() {
             if (m.mentor_id) {
               const { data: mentor } = await supabase
                 .from('mentors')
-                .select('company_name, role')
+                .select('firm, role')
                 .eq('id', m.mentor_id)
                 .single();
               return { ...m, mentor_name: mentor?.role || 'Mentor' };

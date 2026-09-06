@@ -27,7 +27,7 @@ export default function MentorMeetings() {
           status,
           notes,
           startups:startup_id (
-            company_name
+            startup_name
           )
         `)
         .eq('mentor_id', profile.id)
@@ -77,7 +77,7 @@ export default function MentorMeetings() {
           displayedMeetings.map(meeting => (
             <div key={meeting.id} className={styles.meetingCard}>
               <div className={styles.meetingInfo}>
-                <h3>{meeting.startups?.company_name}</h3>
+                <h3>{meeting.startups?.startup_name}</h3>
                 <span className={styles.date}>
                   {new Date(meeting.date).toLocaleDateString('en-US', {
                     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',

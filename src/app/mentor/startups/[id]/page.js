@@ -43,7 +43,7 @@ export default function StartupDetail({ params }) {
       </button>
       
       <header className={styles.header}>
-        <h1>{startup.company_name}</h1>
+        <h1>{startup.startup_name}</h1>
         <div className={styles.badges}>
           <span className={styles.badge}>{startup.sector}</span>
           <span className={styles.badgeOutline}>{startup.stage}</span>
