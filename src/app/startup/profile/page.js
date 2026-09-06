@@ -17,7 +17,6 @@ export default function StartupProfile() {
     stage: '',
     description: '',
     pitch_deck_url: '',
-    website: '',
     full_name: '',
   });
 
@@ -39,7 +38,6 @@ export default function StartupProfile() {
             stage: startupData.stage || '',
             description: startupData.description || '',
             pitch_deck_url: startupData.pitch_deck_url || '',
-            website: startupData.website || '',
           }));
         }
 
@@ -71,16 +69,15 @@ export default function StartupProfile() {
       // Update startup table
       const { error: startupError } = await supabase
         .from('startups')
-        .upsert({
-          id: user.id,
+        .update({
           startup_name: formData.company_name,
           sector: formData.industry,
           stage: formData.stage,
           description: formData.description,
           pitch_deck_url: formData.pitch_deck_url,
-          website: formData.website,
           updated_at: new Date().toISOString()
-        });
+        })
+        .eq('id', user.id);
 
       if (startupError) throw startupError;
 
@@ -187,18 +184,7 @@ export default function StartupProfile() {
               </div>
             </div>
 
-            <div className={styles.inputGroup}>
-              <label>Website</label>
-              <input 
-                type="url" 
-                name="website"
-                value={formData.website}
-                onChange={handleChange}
-                disabled={!isEditing}
-                className={styles.input}
-                placeholder="https://yourstartup.com"
-              />
-            </div>
+
 
             <div className={styles.inputGroup}>
               <label>Company Description</label>
