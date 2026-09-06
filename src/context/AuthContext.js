@@ -83,7 +83,31 @@ export function AuthProvider({ children }) {
         .eq('id', userId)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        // If profile doesn't exist, try to create it manually
+        if (error.code === 'PGRST116') {
+           const { data: { user } } = await supabase.auth.getUser();
+           if (user) {
+             const newProfile = {
+               id: userId,
+               email: user.email,
+               full_name: user.user_metadata?.full_name || user.user_metadata?.name || '',
+               role: user.user_metadata?.role || 'pending'
+             };
+             const { data: insertedData, error: insertError } = await supabase
+               .from('profiles')
+               .insert(newProfile)
+               .select()
+               .single();
+             
+             if (!insertError && insertedData) {
+               setProfile(insertedData);
+               return insertedData;
+             }
+           }
+        }
+        throw error;
+      }
       setProfile(data);
       return data;
     } catch (error) {

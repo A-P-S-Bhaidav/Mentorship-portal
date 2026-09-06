@@ -24,7 +24,7 @@ export default function AuthCallback() {
         }
       } else if (user && !profile) {
         // Profile might not be created by the Postgres trigger yet. Retry.
-        timeoutId = setTimeout(() => {
+        timeoutId = setInterval(() => {
           refreshProfile();
         }, 1000);
       } else if (!user) {
