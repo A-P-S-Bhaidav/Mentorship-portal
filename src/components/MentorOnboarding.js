@@ -19,7 +19,7 @@ export default function MentorOnboarding({ onComplete }) {
     expertise: [],
     bio: '',
     linkedinUrl: '',
-    calendlyLink: '',
+    calLink: '',
     maxStartups: '4'
   });
   const [error, setError] = useState('');
@@ -63,7 +63,7 @@ export default function MentorOnboarding({ onComplete }) {
           expertise: formData.expertise,
           bio: formData.bio,
           linkedin_url: formData.linkedinUrl,
-          calendly_link: formData.calendlyLink,
+          cal_link: formData.calLink,
           max_startups: parseInt(formData.maxStartups, 10) || 4
         })
         .eq('id', user.id);
@@ -165,13 +165,13 @@ export default function MentorOnboarding({ onComplete }) {
                 />
               </div>
               <div className={styles.inputGroup}>
-                <label className={styles.label} htmlFor="calendlyLink">Calendly Link</label>
+                <label className={styles.label} htmlFor="calLink">Cal.com Link</label>
                 <input 
-                  id="calendlyLink"
-                  name="calendlyLink"
+                  id="calLink"
+                  name="calLink"
                   type="url" 
                   className={styles.input} 
-                  value={formData.calendlyLink}
+                  value={formData.calLink}
                   onChange={handleChange}
                   placeholder="https://calendly.com/..."
                 />

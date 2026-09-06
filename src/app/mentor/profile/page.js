@@ -10,7 +10,7 @@ export default function MentorProfile() {
   const [formData, setFormData] = useState({
     bio: '',
     expertise: '',
-    calendly_link: '',
+    cal_link: '',
     max_startups: 3
   });
   const [loading, setLoading] = useState(false);
@@ -21,7 +21,7 @@ export default function MentorProfile() {
       setFormData({
         bio: profile.bio || '',
         expertise: profile.expertise?.join(', ') || '',
-        calendly_link: profile.calendly_link || '',
+        cal_link: profile.cal_link || '',
         max_startups: profile.max_startups || 3
       });
     }
@@ -42,7 +42,7 @@ export default function MentorProfile() {
         .update({
           bio: formData.bio,
           expertise: expertiseArray,
-          calendly_link: formData.calendly_link,
+          cal_link: formData.cal_link,
           max_startups: parseInt(formData.max_startups) || 3
         })
         .eq('id', profile.id);
@@ -61,8 +61,8 @@ export default function MentorProfile() {
     }
   };
 
-  const copyCalendly = () => {
-    navigator.clipboard.writeText(formData.calendly_link);
+  const copyCalLink = () => {
+    navigator.clipboard.writeText(formData.cal_link);
     setToast('Link copied!');
     setTimeout(() => setToast(null), 2000);
   };
@@ -117,16 +117,16 @@ export default function MentorProfile() {
         </div>
 
         <div className={styles.field}>
-          <label>Calendly Scheduling Link</label>
+          <label>Cal.com Scheduling Link</label>
           {isEditing ? (
-            <input type="url" name="calendly_link" placeholder="https://calendly.com/your-name/30min" value={formData.calendly_link} onChange={handleChange} className={styles.input} />
+            <input type="url" name="cal_link" placeholder="https://calendly.com/your-name/30min" value={formData.cal_link} onChange={handleChange} className={styles.input} />
           ) : (
             <div className={styles.linkWrapper}>
-              <a href={formData.calendly_link} target="_blank" rel="noopener noreferrer" className={styles.link}>
-                {formData.calendly_link || 'Not set'}
+              <a href={formData.cal_link} target="_blank" rel="noopener noreferrer" className={styles.link}>
+                {formData.cal_link || 'Not set'}
               </a>
-              {formData.calendly_link && (
-                <button onClick={copyCalendly} className={styles.iconBtn}>
+              {formData.cal_link && (
+                <button type="button" onClick={copyCalLink} className={styles.secondaryBtn}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 </button>
               )}

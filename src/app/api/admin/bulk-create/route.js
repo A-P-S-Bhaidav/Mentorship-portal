@@ -78,7 +78,7 @@ export async function POST(request) {
               id: dummyId,
               firm: record.firm,
               expertise: expertiseArray,
-              calendly_link: record.calendly_link
+              cal_link: record.cal_link
             });
 
           if (mentorError) {

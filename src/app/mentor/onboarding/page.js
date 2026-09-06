@@ -17,7 +17,7 @@ export default function MentorOnboarding() {
     role_type: '',
     expertise: '',
     bio: '',
-    calendly_link: ''
+    cal_link: ''
   });
 
   const handleChange = (e) => {
@@ -49,7 +49,7 @@ export default function MentorOnboarding() {
           role_type: formData.role_type,
           expertise: expertiseArray,
           bio: formData.bio,
-          calendly_link: formData.calendly_link
+          cal_link: formData.cal_link
         })
         .eq('id', user.id);
         
@@ -108,10 +108,10 @@ export default function MentorOnboarding() {
           </div>
 
           <div className={styles.inputGroup}>
-            <label className={styles.label} htmlFor="calendly_link">Calendly Link (Optional)</label>
+            <label className={styles.label} htmlFor="cal_link">Cal.com Link (Optional)</label>
             <input 
-              id="calendly_link" name="calendly_link" type="url" 
-              className={styles.input} value={formData.calendly_link} onChange={handleChange}
+              id="cal_link" name="cal_link" type="url" 
+              className={styles.input} value={formData.cal_link} onChange={handleChange}
               placeholder="https://calendly.com/your-name"
             />
           </div>

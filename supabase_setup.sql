@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS mentors (
   expertise TEXT[] NOT NULL DEFAULT '{}',
   bio TEXT NOT NULL DEFAULT '',
   linkedin_url TEXT DEFAULT '',
-  calendly_link TEXT DEFAULT '',
+  cal_link TEXT DEFAULT '',
   max_startups INTEGER NOT NULL DEFAULT 4,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -298,13 +298,13 @@ BEGIN
   );
   
   IF assigned_role = 'mentor' THEN
-    INSERT INTO public.mentors (id, firm, role_type, bio, calendly_link)
+    INSERT INTO public.mentors (id, firm, role_type, bio, cal_link)
     VALUES (
       NEW.id,
       COALESCE(NEW.raw_user_meta_data->>'firm', ''),
       COALESCE(NEW.raw_user_meta_data->>'role_type', ''),
       COALESCE(NEW.raw_user_meta_data->>'bio', ''),
-      COALESCE(NEW.raw_user_meta_data->>'calendly_link', '')
+      COALESCE(NEW.raw_user_meta_data->>'cal_link', '')
     );
   ELSIF assigned_role = 'startup' THEN
     INSERT INTO public.startups (id, startup_name, founder_name, sector, stage, pitch_deck_url)

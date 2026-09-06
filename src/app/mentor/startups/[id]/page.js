@@ -9,7 +9,7 @@ export default function StartupDetail({ params }) {
   const router = useRouter();
   const { user } = useAuth();
   const [startup, setStartup] = useState(null);
-  const [mentorCalendly, setMentorCalendly] = useState('');
+  const [mentorCalLink, setMentorCalLink] = useState('');
   const [loading, setLoading] = useState(true);
   
   const unwrappedParams = React.use(params);
@@ -53,12 +53,12 @@ export default function StartupDetail({ params }) {
         // Fetch mentor's own calendly link
         const { data: mentorData } = await supabase
           .from('mentors')
-          .select('calendly_link')
+          .select('cal_link')
           .eq('id', user.id)
           .single();
         
-        if (mentorData?.calendly_link) {
-          setMentorCalendly(mentorData.calendly_link);
+        if (mentorData?.cal_link) {
+          setMentorCalLink(mentorData.cal_link);
         }
       } catch (err) {
         console.error('Error fetching startup:', err);
@@ -129,12 +129,12 @@ export default function StartupDetail({ params }) {
             <p className={styles.noData}>No pitch deck available.</p>
           )}
 
-          {mentorCalendly && (
+          {mentorCalLink && (
             <>
               <h2 style={{marginTop: '2rem'}}>Schedule Meeting</h2>
-              <a href={mentorCalendly} target="_blank" rel="noopener noreferrer" className={styles.pitchBtn}>
+              <a href={mentorCalLink} target="_blank" rel="noopener noreferrer" className={styles.pitchBtn}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                Open Calendly
+                Open Cal.com
               </a>
             </>
           )}

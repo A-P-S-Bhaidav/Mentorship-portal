@@ -15,7 +15,7 @@ export default function BulkUploadPage() {
   const fileInputRef = useRef(null);
 
   const startupColumns = ['startup_name', 'founder_name', 'sector', 'stage', 'pitch_deck_url'];
-  const mentorColumns = ['full_name', 'email', 'firm', 'expertise', 'calendly_link'];
+  const mentorColumns = ['full_name', 'email', 'firm', 'expertise', 'cal_link'];
 
   const expectedColumns = activeTab === 'startup' ? startupColumns : mentorColumns;
 

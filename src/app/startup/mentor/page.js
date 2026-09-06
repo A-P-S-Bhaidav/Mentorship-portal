@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
-import { InlineWidget } from 'react-calendly';
+import Cal, { getCalApi } from '@calcom/embed-react';
 import styles from './mentor.module.css';
 
 export default function StartupMentorView() {
@@ -39,6 +39,13 @@ export default function StartupMentorView() {
     }
     fetchMentor();
   }, [user]);
+
+  useEffect(() => {
+    (async function () {
+      const cal = await getCalApi();
+      cal("ui", {"theme":"dark", "styles":{"branding":{"brandColor":"#000000"}},"hideEventTypeDetails":false,"layout":"month_view"});
+    })();
+  }, []);
 
   if (loading) {
     return (
@@ -115,11 +122,15 @@ export default function StartupMentorView() {
         )}
       </div>
 
-      {mentor.calendly_link && (
+      {mentor.cal_link && (
         <div className={styles.schedulingSection}>
           <h2 className={styles.sectionTitle}>Schedule a Mentoring Session</h2>
-          <div style={{ marginTop: '1.5rem', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-subtle)' }}>
-            <InlineWidget url={mentor.calendly_link} styles={{ height: '700px' }} />
+          <div style={{ marginTop: '1.5rem', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-subtle)', background: '#111' }}>
+            <Cal 
+              calLink={mentor.cal_link.replace(/(https?:\/\/)?(www\.)?cal\.com\//, '')} 
+              style={{ width: "100%", height: "700px", overflow: "scroll" }}
+              config={{ layout: 'month_view', theme: 'dark' }}
+            />
           </div>
         </div>
       )}
