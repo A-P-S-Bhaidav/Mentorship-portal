@@ -122,7 +122,7 @@ export default function StartupMentorView() {
         )}
       </div>
 
-      {mentor.cal_link && (
+      {mentor.cal_link ? (
         <div className={styles.schedulingSection}>
           <h2 className={styles.sectionTitle}>Schedule a Mentoring Session</h2>
           <div style={{ marginTop: '1.5rem', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-subtle)', background: '#111' }}>
@@ -132,6 +132,11 @@ export default function StartupMentorView() {
               config={{ layout: 'month_view', theme: 'dark' }}
             />
           </div>
+        </div>
+      ) : (
+        <div className={styles.schedulingSection}>
+          <h2 className={styles.sectionTitle}>Schedule a Mentoring Session</h2>
+          <p style={{ marginTop: '1rem', color: 'var(--text-secondary)' }}>This mentor hasn&apos;t connected their booking calendar yet. Ask them to update their profile with a Cal.com link.</p>
         </div>
       )}
     </div>
