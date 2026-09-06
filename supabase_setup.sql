@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT NOT NULL,
   full_name TEXT NOT NULL DEFAULT '',
-  role TEXT NOT NULL CHECK (role IN ('mentor', 'startup', 'admin')),
+  role TEXT NOT NULL CHECK (role IN ('mentor', 'startup', 'admin', 'pending')),
   avatar_url TEXT DEFAULT '',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -280,17 +280,59 @@ CREATE TRIGGER startups_updated_at
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
 -- ──────────────────────────────────────
--- 9. SEED ADMIN USER (OPTIONAL)
+-- 9. AUTO PROFILE CREATION TRIGGER
+-- Automatically creates a profile when a new user signs up.
+-- Also auto-assigns admin role to anantbhaidav@gmail.com
 -- ──────────────────────────────────────
--- After creating your admin user via the Auth UI or signUp,
--- run this to set their role:
---
--- UPDATE profiles SET role = 'admin' WHERE email = 'your-admin@email.com';
---
--- Or insert directly if user already exists in auth.users:
---
--- INSERT INTO profiles (id, email, full_name, role)
--- VALUES ('your-user-uuid', 'admin@empressario.com', 'Admin', 'admin');
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger AS $$
+DECLARE
+  assigned_role TEXT;
+BEGIN
+  IF NEW.email = 'anantbhaidav@gmail.com' THEN
+    assigned_role := 'admin';
+  ELSIF NEW.raw_user_meta_data->>'role' IS NOT NULL THEN
+    assigned_role := NEW.raw_user_meta_data->>'role';
+  ELSE
+    assigned_role := 'pending';
+  END IF;
+
+  INSERT INTO public.profiles (id, email, full_name, role)
+  VALUES (
+    NEW.id,
+    NEW.email,
+    COALESCE(NEW.raw_user_meta_data->>'full_name', ''),
+    assigned_role
+  );
+  
+  IF assigned_role = 'mentor' THEN
+    INSERT INTO public.mentors (id, firm, role_type, bio, calendly_link)
+    VALUES (
+      NEW.id,
+      COALESCE(NEW.raw_user_meta_data->>'firm', ''),
+      COALESCE(NEW.raw_user_meta_data->>'role_type', ''),
+      COALESCE(NEW.raw_user_meta_data->>'bio', ''),
+      COALESCE(NEW.raw_user_meta_data->>'calendly_link', '')
+    );
+  ELSIF assigned_role = 'startup' THEN
+    INSERT INTO public.startups (id, startup_name, founder_name, sector, stage, pitch_deck_url)
+    VALUES (
+      NEW.id,
+      COALESCE(NEW.raw_user_meta_data->>'startup_name', ''),
+      COALESCE(NEW.raw_user_meta_data->>'founder_name', ''),
+      COALESCE(NEW.raw_user_meta_data->>'sector', ''),
+      COALESCE(NEW.raw_user_meta_data->>'stage', ''),
+      COALESCE(NEW.raw_user_meta_data->>'pitch_deck_url', '')
+    );
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- ──────────────────────────────────────
 -- SETUP COMPLETE

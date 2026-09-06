@@ -30,7 +30,54 @@ export function AuthProvider({ children }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
         setUser(session.user);
-        await fetchProfile(session.user.id);
+        const fetchedProfile = await fetchProfile(session.user.id);
+        
+        // Handle pending OAuth registration
+        if (fetchedProfile && fetchedProfile.role === 'pending') {
+          const pendingReg = localStorage.getItem('pendingOAuthRegistration');
+          if (pendingReg) {
+            try {
+              const regData = JSON.parse(pendingReg);
+              const { role, full_name, ...additionalData } = regData;
+              
+              // Update profile role
+              await supabase
+                .from('profiles')
+                .update({ role, full_name: full_name || fetchedProfile.full_name })
+                .eq('id', session.user.id);
+              
+              // Insert into mentor/startup table
+              if (role === 'mentor') {
+                await supabase.from('mentors').insert({
+                  id: session.user.id,
+                  firm: additionalData.firm || '',
+                  role_type: additionalData.role_type || '',
+                  expertise: additionalData.expertise || [],
+                  bio: additionalData.bio || '',
+                  linkedin_url: additionalData.linkedin_url || '',
+                  calendly_link: additionalData.calendly_link || '',
+                  max_startups: additionalData.max_startups || 4,
+                });
+              } else if (role === 'startup') {
+                await supabase.from('startups').insert({
+                  id: session.user.id,
+                  startup_name: additionalData.startup_name || '',
+                  founder_name: additionalData.founder_name || '',
+                  sector: additionalData.sector || '',
+                  stage: additionalData.stage || '',
+                  team_size: additionalData.team_size || '',
+                  pitch_deck_url: additionalData.pitch_deck_url || '',
+                  description: additionalData.description || '',
+                });
+              }
+              
+              localStorage.removeItem('pendingOAuthRegistration');
+              await fetchProfile(session.user.id); // Re-fetch updated profile
+            } catch (err) {
+              console.error('Failed to resolve pending OAuth registration', err);
+            }
+          }
+        }
       } else {
         setUser(null);
         setProfile(null);
@@ -51,8 +98,10 @@ export function AuthProvider({ children }) {
 
       if (error) throw error;
       setProfile(data);
+      return data;
     } catch (error) {
       console.error('Profile fetch error:', error);
+      return null;
     }
   };
 
@@ -60,56 +109,26 @@ export function AuthProvider({ children }) {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          role,
+          ...additionalData
+        }
+      }
     });
 
     if (error) throw error;
+    return data;
+  };
 
-    if (data.user) {
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          id: data.user.id,
-          email,
-          role,
-          full_name: additionalData.full_name || '',
-          created_at: new Date().toISOString(),
-        });
-
-      if (profileError) throw profileError;
-
-      if (role === 'mentor') {
-        const { error: mentorError } = await supabase
-          .from('mentors')
-          .insert({
-            id: data.user.id,
-            firm: additionalData.firm || '',
-            role_type: additionalData.role_type || '',
-            expertise: additionalData.expertise || [],
-            bio: additionalData.bio || '',
-            linkedin_url: additionalData.linkedin_url || '',
-            calendly_link: additionalData.calendly_link || '',
-            max_startups: additionalData.max_startups || 4,
-          });
-        if (mentorError) throw mentorError;
+  const signInWithOAuth = async (provider) => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
       }
-
-      if (role === 'startup') {
-        const { error: startupError } = await supabase
-          .from('startups')
-          .insert({
-            id: data.user.id,
-            startup_name: additionalData.startup_name || '',
-            founder_name: additionalData.founder_name || '',
-            sector: additionalData.sector || '',
-            stage: additionalData.stage || '',
-            team_size: additionalData.team_size || '',
-            pitch_deck_url: additionalData.pitch_deck_url || '',
-            description: additionalData.description || '',
-          });
-        if (startupError) throw startupError;
-      }
-    }
-
+    });
+    if (error) throw error;
     return data;
   };
 
@@ -136,6 +155,7 @@ export function AuthProvider({ children }) {
       loading,
       signUp,
       signIn,
+      signInWithOAuth,
       signOut,
       refreshProfile: () => user && fetchProfile(user.id),
     }}>
