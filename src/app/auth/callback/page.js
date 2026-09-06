@@ -7,13 +7,12 @@ import styles from './callback.module.css';
 
 export default function AuthCallback() {
   const router = useRouter();
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, refreshProfile } = useAuth();
 
   useEffect(() => {
-    // If not loading, decide where to send them
+    let timeoutId;
     if (!loading) {
       if (user && profile) {
-        // Authenticated and profile loaded, route them to their dashboard
         if (profile.role === 'admin') {
           router.push('/admin/dashboard');
         } else if (profile.role === 'mentor') {
@@ -21,14 +20,18 @@ export default function AuthCallback() {
         } else if (profile.role === 'startup') {
           router.push('/startup/dashboard');
         } else {
-          // Fallback if role is 'pending' or unknown
           router.push('/');
         }
+      } else if (user && !profile) {
+        // Profile might not be created by the Postgres trigger yet. Retry.
+        timeoutId = setTimeout(() => {
+          refreshProfile();
+        }, 1000);
       } else if (!user) {
-        // Not authenticated, send back to login
         router.push('/auth/login');
       }
     }
+    return () => clearTimeout(timeoutId);
   }, [user, profile, loading, router]);
 
   return (
